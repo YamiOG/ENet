@@ -1,0 +1,12 @@
+﻿  main.cpp
+E:\Code\ENet\ENet\ENet.h(20): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(34): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(251): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(284): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(297): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(358): warning C4018: '<': signed/unsigned mismatch
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 322 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ENet.vcxproj -> E:\Code\ENet\Release\ENet.exe

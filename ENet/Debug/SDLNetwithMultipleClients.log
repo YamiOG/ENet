@@ -1,0 +1,4 @@
+﻿ENet.obj : error LNK2005: "void __cdecl ENetAddClient(class std::vector<struct _TCPsocket *,class std::allocator<struct _TCPsocket *> > &,int,int &,int,int &,int,bool &,bool)" (?ENetAddClient@@YAXAAV?$vector@PAU_TCPsocket@@V?$allocator@PAU_TCPsocket@@@std@@@std@@HAAHH1HAA_N_N@Z) already defined in main.obj
+ENet.obj : error LNK2005: "void __cdecl ENetConnectionHandler(struct ENetData,struct ENetData &,struct _TCPsocket * &,int,bool)" (?ENetConnectionHandler@@YAXUENetData@@AAU1@AAPAU_TCPsocket@@H_N@Z) already defined in main.obj
+ENet.obj : error LNK2005: "void __cdecl ENetOpeningServer(struct IPaddress,struct _TCPsocket * &,int &,int,bool &,bool)" (?ENetOpeningServer@@YAXUIPaddress@@AAPAU_TCPsocket@@AAHHAA_N_N@Z) already defined in main.obj
+E:\Code\SDLNetwithMultipleClients\Debug\SDLNetwithMultipleClients.exe : fatal error LNK1169: one or more multiply defined symbols found
