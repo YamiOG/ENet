@@ -16,6 +16,8 @@ SDL_Event ev;
 //Net
 vector<TCPsocket> socket;
 vector<bool> activeVec;
+vector<ENet_Data> storeData;
+ENet_Data inputData;
 IPaddress ip;
 string ipAddress;
 int idNum = -1;
@@ -97,16 +99,34 @@ int main(int argc, char *argv[])
 			//Trying to Open a Server
 			ENet_OpenServer(ip, socket[0], idNum, isOnline, consoleData);
 
+			inputData.id = idNum;
+			inputData.time = SDL_GetTicks();
+			inputData.command = '0';
+
 			//Handlers Server data and sends data
-			ENet_ClientHandler(socket[0], idNum, isOnline, consoleData);
+			ENet_ClientHandler(socket[0], idNum, inputData, storeData, isOnline, consoleData);
+
+			/*for (int i = 0; i < storeData.size(); i++)
+			{
+				cout << "Recv: " << storeData[i].id << " - " << storeData[i].time << endl;\
+			}*/
 		}
 		if (tolower(answer) == 's')
 		{
 			//Adds Clients when clients try to connect
 			ENet_AddClient(socket, 0, activeVec, socketMax, isOnline, consoleData);
 
+			inputData.id = idNum;
+			inputData.time = SDL_GetTicks();
+			inputData.command = '0';
+
 			//Handles Client data and Sends data
-			ENet_ServerHandler(socket, 0, activeVec, idNum, isOnline, consoleData);
+			ENet_ServerHandler(socket, 0, activeVec, idNum, inputData, storeData, isOnline, consoleData);
+
+			/*for (int i = 0; i < storeData.size(); i++)
+			{
+				cout << "Recv: " << storeData[i].id << " - " << storeData[i].time << endl;
+			}*/
 		}
 	}
 
