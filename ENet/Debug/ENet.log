@@ -2,10 +2,9 @@
   main.cpp
 E:\Code\ENet\ENet\ENet.h(20): warning C4018: '<': signed/unsigned mismatch
 E:\Code\ENet\ENet\ENet.h(34): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(143): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(258): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(265): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(300): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(313): warning C4018: '<': signed/unsigned mismatch
-E:\Code\ENet\ENet\ENet.h(373): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(264): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(281): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(305): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(322): warning C4018: '<': signed/unsigned mismatch
+E:\Code\ENet\ENet\ENet.h(378): warning C4018: '<': signed/unsigned mismatch
   ENet.vcxproj -> E:\Code\ENet\Debug\ENet.exe

@@ -41,7 +41,7 @@ int ENet_ActiveBoolNum(vector<bool> activeVec)
 	return activeNum;
 }
 
-int ENet_Init(char answer, vector<TCPsocket> &socket, vector<bool> &activeVec, int &idNum, IPaddress &ip, string ipAddress, int port, bool consoleData)
+int ENet_Init(char answer, vector<TCPsocket>& socket, vector<bool>& activeVec, int& idNum, IPaddress& ip, string ipAddress, int port, bool consoleData)
 {
 	if (tolower(answer) == 'c')
 	{
@@ -85,7 +85,7 @@ int ENet_Init(char answer, vector<TCPsocket> &socket, vector<bool> &activeVec, i
 	return 0;
 }
 
-void ENet_OpenServer(IPaddress ip, TCPsocket &socket, int &idNum, bool &isOnline, bool consoleData)
+void ENet_OpenServer(IPaddress ip, TCPsocket& socket, int& idNum, bool& isOnline, bool consoleData)
 {
 	if (isOnline == false)
 	{
@@ -129,7 +129,7 @@ void ENet_OpenServer(IPaddress ip, TCPsocket &socket, int &idNum, bool &isOnline
 	}
 }
 
-void ENet_ClientHandler(TCPsocket &socket, int &idNum, ENet_Data inputData, vector<ENet_Data> &storeData, bool &isOnline, bool consoleData)
+void ENet_ClientHandler(TCPsocket& socket, int& idNum, ENet_Data inputData, vector<ENet_Data>& storeData, int socketMax, bool& isOnline, bool consoleData)
 {
 	if (isOnline == true)
 	{
@@ -140,18 +140,21 @@ void ENet_ClientHandler(TCPsocket &socket, int &idNum, ENet_Data inputData, vect
 			bool kick = false;
 
 			//Erases All Data Stored
-			for (int i = 0; i < storeData.size(); i++)
-			{
-				storeData.erase(storeData.begin() + i);
-			}
+			storeData.clear();
 
 			//Receives Connected Clients Num
 			SDLNet_TCP_Recv(socket, &connectedNum, sizeof(connectedNum));
+
+			while (connectedNum > socketMax)
+			{
+				SDLNet_TCP_Recv(socket, &connectedNum, sizeof(connectedNum));
+			}
 
 			for (int i = 0; i < connectedNum; i++)
 			{
 				//Receives Data
 				SDLNet_TCP_Recv(socket, &tmpData, sizeof(tmpData));
+
 				//If Command 0 Receiving Data
 				if (tmpData.command == '0')
 				{
@@ -204,8 +207,8 @@ void ENet_ClientHandler(TCPsocket &socket, int &idNum, ENet_Data inputData, vect
 	}
 }
 
-void ENet_AddClient(vector<TCPsocket> &socket, int arrayNum, vector<bool>& activeVec, int socketMax, bool &isOnline, bool consoleData)
-{ 
+void ENet_AddClient(vector<TCPsocket>& socket, int arrayNum, vector<bool>& activeVec, int socketMax, bool& isOnline, bool consoleData)
+{
 	//Makes a Tmp Socket to receive client with
 	TCPsocket tmpSocket = NULL;
 	if (!tmpSocket)
@@ -234,7 +237,7 @@ void ENet_AddClient(vector<TCPsocket> &socket, int arrayNum, vector<bool>& activ
 
 			//Adds Client to Socket Vector
 			socket.push_back(tmpSocket);
-			
+
 			//Sets Server Online to true
 			isOnline = true;
 			if (consoleData == true)
@@ -251,24 +254,22 @@ void ENet_AddClient(vector<TCPsocket> &socket, int arrayNum, vector<bool>& activ
 	}
 }
 
-void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& activeVec, int& idNum, ENet_Data inputData, vector<ENet_Data> &storeData, bool isOnline, bool consoleData)
+void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& activeVec, int& idNum, ENet_Data inputData, vector<ENet_Data>& storeData, bool isOnline, bool consoleData)
 {
 	if (isOnline == true)
 	{
+		//Erases All Data Stored
+		storeData.clear();
+
 		for (int i = 0; i < socket.size(); i++)
 		{
 			if (socket[i] && i != arrayNum)
 			{
 				ENet_Data tmpData;
 
-				//Erases All Data Stored
-				for (int i = 0; i < storeData.size(); i++)
-				{
-					storeData.erase(storeData.begin() + i);
-				}
-
 				//Receives Data
 				SDLNet_TCP_Recv(socket[i], &tmpData, sizeof(tmpData));
+
 				//If Command 0 Receiving Data
 				if (tmpData.command == '0')
 				{
@@ -277,9 +278,13 @@ void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& a
 
 					if (consoleData == true)
 					{
-						cout << "Recv: " << tmpData.id << " - " << tmpData.time << endl;
+						for (int i = 0; i < storeData.size(); i++)
+						{
+							cout << "Recv: " << tmpData.id << " - " << tmpData.time << endl;
+						}
 					}
 				}
+
 				//If Command 1 Client Closing
 				if (tmpData.command == '1')
 				{
@@ -309,6 +314,10 @@ void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& a
 					continue;
 				}
 
+				//Sends Connected Number of Client
+				int connectedNum = ENet_ActiveBoolNum(activeVec) - 1;
+				SDLNet_TCP_Send(socket[i], &connectedNum, sizeof(connectedNum));
+
 				//Sends Received Data to Other Clients
 				for (int k = 0; k < socket.size(); k++)
 				{
@@ -318,10 +327,6 @@ void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& a
 					}
 					SDLNet_TCP_Send(socket[k], &tmpData, sizeof(tmpData));
 				}
-
-				//Sends Connected Number of Client
-				int connectedNum = ENet_ActiveBoolNum(activeVec) - 1;
-				SDLNet_TCP_Send(socket[i], &connectedNum, sizeof(connectedNum));
 
 				//Sends Server Data to Client
 				tmpData = inputData;
@@ -337,7 +342,7 @@ void ENet_ServerHandler(vector<TCPsocket>& socket, int arrayNum, vector<bool>& a
 	}
 }
 
-void ENet_CloseServer(vector<TCPsocket> &socket, int arrayNum, int idNum, bool consoleData)
+void ENet_CloseServer(vector<TCPsocket>& socket, int arrayNum, int idNum, bool consoleData)
 {
 	ENet_Data tmpData;
 	tmpData.id = idNum;
@@ -360,7 +365,7 @@ void ENet_CloseServer(vector<TCPsocket> &socket, int arrayNum, int idNum, bool c
 	}
 }
 
-void ENet_ServerCleanUp(vector<TCPsocket>& socket, vector<bool>& activeVec, int &idNum, bool consoleData)
+void ENet_ServerCleanUp(vector<TCPsocket>& socket, vector<bool>& activeVec, int& idNum, bool consoleData)
 {
 	ENet_Data tmpData;
 	tmpData.id = idNum;

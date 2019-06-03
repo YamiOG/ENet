@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 			inputData.command = '0';
 
 			//Handlers Server data and sends data
-			ENet_ClientHandler(socket[0], idNum, inputData, storeData, isOnline, consoleData);
+			ENet_ClientHandler(socket[0], idNum, inputData, storeData, socketMax, isOnline, consoleData);
 
 			/*for (int i = 0; i < storeData.size(); i++)
 			{
